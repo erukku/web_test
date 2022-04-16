@@ -16,11 +16,11 @@ func main(){
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
 	dbInit()
-	ua := ""
+	
 
 	router.GET("/",getHandler)
-	r.POST("/new",postHandler)
-	r.Run()
+	router.POST("/new",postHandler)
+	router.Run()
 
 	err :=router.Run("127.0.0.1:8888")
 	if err != nil{
@@ -35,33 +35,32 @@ func getHandler(c *gin.Context){
 }
 
 func postHandler(c *gin.Context){
-	memo := c.postFrom("memo")
+	memo := c.PostForm("memo")
 	create(memo)
 	c.Redirect(302,"/")
 }
 
 func dbInit(){
 	db,err := gorm.Open("sqlite3","todo.splite3")
-	if err != nul {
-
+	if err != nil {
 		panic("fail to connect db\n")
 	}
+	db.AutoMigrate(&Todo{})
 }
 
 
-func create (memo string){
+func create(memo string){
 	db,err := gorm.Open("sqlite3","todo.splite3")
-	if err != nul {
+	if err != nil {
 
 		panic("fail to connect db\n")
 	}
-	db.Create(&Todo(Memo:memo))
+	db.Create(&Todo{Memo:memo})
 }
 
-func getAll() []Todo{
-	db,err = gorm.Open("sqlite3","todo.splite3")
-	if err != nul {
-
+func getAll() []Todo {
+	db,err := gorm.Open("sqlite3","todo.splite3")
+	if err != nil {
 		panic("fail to connect db\n")
 	}
 	var todo []Todo

@@ -1,1 +1,36 @@
-<h1 style="color: rebeccapurple;">{{.message}}</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset = "UTF-8">
+    <title>Todo</title>
+    <link rel="stylesheet" href="../styles/style.css">
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+
+  <body>
+
+    <h1>Todo</h1>
+    <div align="center">
+    <form method="post" action="/new">
+        <p>メモ<input type="text" name="memo" size="30" placeholder="入力してください">
+        <input type="submit" value="登録"></p>
+    </form>
+    </div>
+    <div class="container">
+    <ul>
+        {{ range .todo }}
+            <li>{{.Memo}}</li>
+        {{ end }}
+    </ul>
+    </div>
+
+    <!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+  </body>
+</html>
