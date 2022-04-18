@@ -14,6 +14,9 @@ type Todo struct {
 
 func main(){
 	router := gin.Default()
+	router.Static("styles", "./styles")
+	router.Static("css", "./css")
+	router.Static("js", "./js")
 	router.LoadHTMLGlob("templates/*")
 	dbInit()
 	
