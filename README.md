@@ -4,6 +4,6 @@ front vue(javascript)
 
 back gin(golang)
 
-css semantic
+css Materialize
 
 でお試ししている所
