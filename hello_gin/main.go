@@ -17,6 +17,7 @@ func main(){
 	router.Static("styles", "./styles")
 	router.Static("css", "./css")
 	router.Static("js", "./js")
+	router.Static("image", "./image")
 	router.LoadHTMLGlob("templates/*")
 	dbInit()
 	
