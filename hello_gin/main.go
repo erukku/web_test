@@ -1,6 +1,7 @@
 package main
 import(
 	"log"
+	
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3"
@@ -69,5 +70,13 @@ func getAll() []Todo {
 	}
 	var todo []Todo
 	db.Find(&todo)
-	return todo
+	return todo[max(0,len(todo)-4):]
+}
+
+func max (a int,b int) int {
+	if a > b{
+		return a
+	}else{
+		return b
+	}
 }
