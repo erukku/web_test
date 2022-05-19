@@ -63,12 +63,12 @@
 <h1>{{.Size}}</h1>
 <ul>
   <div class="row">
-  {{ range .Ids }}
+  {{ range .Colors }}
   <div class="col s4">
   <li><svg width="100" height="100">
-    <circle cx="50" cy="50" r="50" fill={{.Id}}>
+    <circle cx="50" cy="50" r="50" fill={{.Color}}>
   </svg></li>
-  <li><div align="center"><font color={{.Id}}>{{.Id}}</font></div></li>
+  <li><div align="center"><font color={{.Color}}>{{.Color}}</font></div></li>
   </div>
   {{ end }}
   </div>
