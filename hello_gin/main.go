@@ -20,8 +20,8 @@ type Todo struct {
 	Memo string
 }
 
-type Ids struct {
-	Id string
+type Colors struct {
+	Color string
 }
 
 func udpGet(){
@@ -60,7 +60,7 @@ func udpGet(){
 	}
 }
 
-func readIds(txt string,ids *[]Ids) error {
+func readIds(txt string,colors *[]Colors) error {
 	file,err := os.Open(txt)
 	if err != nil{
 		return err
@@ -80,17 +80,16 @@ func readIds(txt string,ids *[]Ids) error {
 		}
 
 		str := string(line)
-		idd, err := strconv.Atoi(str)
+		colr, err := strconv.Atoi(str)
 		if err != nil{
 			return err
 		}
 		mod := int(math.Pow(16,6))
-		idd = idd % mod
-		id := fmt.Sprintf("%06x", idd)
-		log.Printf("%d",idd)
-		id = "#"+id
-		*ids = append(*ids,Ids{
-			Id: id,
+		colr = colr % mod
+		color := fmt.Sprintf("%06x", colr)
+		color = "#"+color
+		*colors = append(*colors,Colors{
+			Color: color,
 		})
 
 	}
@@ -148,13 +147,13 @@ func getHandler2(c *gin.Context){
 	//todo := getAll()
 	//c.HTML(200,"next.html",gin.H{"todo":todo})
 
-	var idlist []Ids
+	var colorlist []Colors
 	txt := "id.txt"
-	if err := readIds(txt,&idlist);err != nil{
+	if err := readIds(txt,&colorlist);err != nil{
 		log.Fatal(err)
 	}
-	size := len(idlist)
-	c.HTML(200,"next.html",gin.H{"Size":size,"Ids":idlist})
+	size := len(colorlist)
+	c.HTML(200,"next.html",gin.H{"Size":size,"Colors":colorlist})
 }
 
 func postHandler(c *gin.Context){
