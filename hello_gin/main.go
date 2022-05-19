@@ -1,7 +1,14 @@
 package main
 import(
+	"os"
+	"io"
+	"fmt"
+	"bufio"
 	"log"
-	
+	"net"
+	"math"
+	"strconv"
+	"strings"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3"
@@ -11,6 +18,101 @@ import(
 type Todo struct {
 	gorm.Model
 	Memo string
+}
+
+type Ids struct {
+	Id string
+}
+
+func udpGet(){
+	txtName := "id.txt"
+
+	udp := &net.UDPAddr{
+		IP:   net.ParseIP("localhost"),
+		Port: 8081,
+	}
+	updLn, err2 := net.ListenUDP("udp", udp)
+	if err2 != nil{
+		log.Fatal("fail",err2)
+	}
+
+	buf := make([]byte, 1024)
+	log.Println("Starting UDP Server...")
+
+	for {
+		n, addr, err := updLn.ReadFromUDP(buf)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		data := string(buf[:n])
+
+		dataS := strings.Split(data,",")
+		if len(dataS) != 0 && dataS[0] != ""{
+
+		}
+		if err:= writerow(txtName,dataS); err != nil {
+			log.Fatalln(err)
+		}
+
+		go func() {
+			log.Printf("From: %v Reciving data: %s", addr.String(), data)
+		}()
+	}
+}
+
+func readIds(txt string,ids *[]Ids) error {
+	file,err := os.Open(txt)
+	if err != nil{
+		return err
+	}
+
+	defer file.Close()
+
+	reader := bufio.NewReader(file)
+
+	for {
+		line, _ ,err := reader.ReadLine()
+		if err == io.EOF{
+			break
+		}
+		if err != nil {
+			return err
+		}
+
+		str := string(line)
+		idd, err := strconv.Atoi(str)
+		if err != nil{
+			return err
+		}
+		mod := int(math.Pow(16,6))
+		idd = idd % mod
+		id := fmt.Sprintf("%06x", idd)
+		log.Printf("%d",idd)
+		id = "#"+id
+		*ids = append(*ids,Ids{
+			Id: id,
+		})
+
+	}
+
+	return nil
+}
+
+func writerow(txt string,idlist []string) error{
+	file,err := os.Create(txt)
+	if err != nil{
+		return err
+	}
+
+	defer file.Close()
+
+	for _,id := range idlist{
+		_,err := file.WriteString(id+"\n")
+		if err != nil{
+			return err
+		}
+	}
+	return nil
 }
 
 func main(){
@@ -24,10 +126,13 @@ func main(){
 	
 
 	router.GET("/",getHandler)
+	router.GET("/next.html",getHandler2)
+	log.Printf("aa")
 	router.POST("/new",postHandler)
+	go udpGet()
 	router.Run()
-
-	err :=router.Run("127.0.0.1:8888")
+	
+	err :=router.Run(":8888")
 	if err != nil{
 		log.Fatal("fail",err)
 	}
@@ -37,6 +142,19 @@ func main(){
 func getHandler(c *gin.Context){
 	todo := getAll()
 	c.HTML(200,"index.html",gin.H{"todo":todo})
+}
+
+func getHandler2(c *gin.Context){
+	//todo := getAll()
+	//c.HTML(200,"next.html",gin.H{"todo":todo})
+
+	var idlist []Ids
+	txt := "id.txt"
+	if err := readIds(txt,&idlist);err != nil{
+		log.Fatal(err)
+	}
+	size := len(idlist)
+	c.HTML(200,"next.html",gin.H{"Size":size,"Ids":idlist})
 }
 
 func postHandler(c *gin.Context){

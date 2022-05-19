@@ -2,6 +2,14 @@ body {
 	color: gray;
 }
 
+circle{
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: skyblue;
+}
+
 h1 {
     text-align: center;
     font-family: sans-serif;
