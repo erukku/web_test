@@ -80,6 +80,9 @@ func readIds(txt string,colors *[]Colors) error {
 		}
 
 		str := string(line)
+		if str == ""{
+			str = "0"
+		}
 		colr, err := strconv.Atoi(str)
 		if err != nil{
 			return err
@@ -126,6 +129,7 @@ func main(){
 
 	router.GET("/",getHandler)
 	router.GET("/next.html",getHandler2)
+	router.GET("/game1.html",getHandler3)
 	log.Printf("aa")
 	router.POST("/new",postHandler)
 	go udpGet()
@@ -154,6 +158,10 @@ func getHandler2(c *gin.Context){
 	}
 	size := len(colorlist)
 	c.HTML(200,"next.html",gin.H{"Size":size,"Colors":colorlist})
+}
+
+func getHandler3(c *gin.Context){
+	c.HTML(200,"game1.html",gin.H{})
 }
 
 func postHandler(c *gin.Context){
